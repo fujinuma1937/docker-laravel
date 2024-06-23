@@ -11,6 +11,6 @@ RUN apt-get update && \
 COPY ./docker/app/php.ini /usr/local/etc/php/php.ini
 
 # install Composer
-COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app

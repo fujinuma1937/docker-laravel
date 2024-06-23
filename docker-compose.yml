@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     volumes:
-      - ./API/:/app
+      - ./htdocs/:/app
 
   web:
     build:
@@ -13,7 +13,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - ./API/:/app
+      - ./htdocs/:/app
     depends_on:
       - app
 
