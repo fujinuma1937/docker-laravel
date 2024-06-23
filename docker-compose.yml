@@ -1,3 +1,9 @@
+version: '3.8'
+
+networks:
+  my-network:
+    driver: bridge
+
 services:
   app:
     build:
@@ -5,6 +11,14 @@ services:
       dockerfile: ./docker/app/Dockerfile
     volumes:
       - ./htdocs/:/app
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm -t || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
   web:
     build:
@@ -16,6 +30,14 @@ services:
       - ./htdocs/:/app
     depends_on:
       - app
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
   db:
     build:
@@ -31,6 +53,14 @@ services:
       TZ: "Asia/Tokyo"
     volumes:
       - mysql-volume:/var/lib/mysql
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
   phpmyadmin:
     image: phpmyadmin
@@ -43,6 +73,9 @@ services:
       - PMA_PASSWORD=password
     ports:
       - "3000:80"
+    networks:
+      - my-network
+    restart: unless-stopped
 
 volumes:
   mysql-volume:
