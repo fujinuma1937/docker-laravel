@@ -43,8 +43,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/db/Dockerfile
-    ports:
-      - 3307:3306
     environment:
       MYSQL_DATABASE: db
       MYSQL_USER: user
